@@ -1,0 +1,11 @@
+get http://127.0.0.1:5000/customers
+
+###
+
+post http://127.0.0.1:5000/customers
+Content-Type: application/json
+
+{
+    "name": "AAAA",
+    "email": "jasdos1fde@gmail.com"
+}
