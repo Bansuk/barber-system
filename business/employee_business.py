@@ -16,7 +16,7 @@ def create_employee(name: str, email: str) -> Employee:
         email (str): The email of the employee.
 
     Returns:
-        Employee: Created emplye.
+        Employee: Created employee.
     """
 
     EmployeeValidation.validate_employee_data(

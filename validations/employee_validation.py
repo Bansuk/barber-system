@@ -1,5 +1,5 @@
 """
-Validation module for Customer entities.
+Validation module for Employee entities.
 """
 
 from database.models import Employee

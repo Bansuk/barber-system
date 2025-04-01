@@ -1,32 +1,26 @@
-"""
-This module defines the Employee model for the database.
-"""
-
 from datetime import datetime
 from database.db_setup import db
 
 
-class Employee(db.Model):
+class Service(db.Model):
     """
-    Represents a employee entity in the database.
+    Represents a service entity in the database.
 
     Attributes:
         id (int): Primary key identifier.
-        name (str): Name of the employee.
-        email (str): Unique email of the employee.
+        name (str): Name of the service.
+        price (int): Price of the service.
         created_at (datetime): Timestamp when the record was created.
         updated_at (datetime): Timestamp when the record was last updated.
     """
-
-    __tablename__ = 'employee'
+    __tablename__ = 'service'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    picture = db.Column(db.LargeBinary)
+    price = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, name: str, email: str) -> None:
+    def __init__(self, name: str, price: int) -> None:
         self.name = name
-        self.email = email
+        self.price = price
