@@ -9,7 +9,7 @@ from validations.validation_error import ValidationError
 employee_bp = Blueprint('employee', __name__)
 
 
-@employee_bp.route("/employees", methods=['POST'])
+@employee_bp.route('/employees', methods=['POST'])
 def add_employee():
     """
     Handles the creation of a new employee.
