@@ -1,9 +1,12 @@
 """
 This module defines the Customer model for the database.
 """
-
+from typing import TYPE_CHECKING
 from datetime import datetime, timezone
 from database.db_setup import db
+
+if TYPE_CHECKING:
+    from .appointment import Appointment
 
 
 class Customer(db.Model):
@@ -23,12 +26,12 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    appointments = db.relationship(
-        'Appointment', back_populates='customer', cascade='all, delete-orphan')
+    appointments = db.relationship('Appointment', back_populates='customers')
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(
         db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
-    def __init__(self, name: str, email: str) -> None:
+    def __init__(self, name: str, email: str, appointments: list['Appointment']) -> None:
         self.name = name
         self.email = email
+        self.appointments = appointments

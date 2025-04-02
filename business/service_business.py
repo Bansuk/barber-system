@@ -22,7 +22,7 @@ def create_service(name: str, price: int) -> Service:
     ServiceValidation.validate_service_data(
         name, price)
 
-    service = Service(name=name, price=price)
+    service = Service(name=name, price=price, employees=[], appointments=[])
     db.session.add(service)
     db.session.commit()
 

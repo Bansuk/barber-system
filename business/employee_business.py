@@ -26,7 +26,7 @@ def create_employee(name: str, email: str, service_ids: list) -> Employee:
 
     services = Service.query.filter(Service.id.in_(service_ids)).all()
 
-    employee = Employee(name=name, email=email, services=services)
+    employee = Employee(name, email, services, appointments=[])
     db.session.add(employee)
     db.session.commit()
 

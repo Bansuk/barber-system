@@ -22,7 +22,7 @@ def create_customer(name: str, email: str) -> Customer:
     CustomerValidation.validate_customer_data(
         name, email)
 
-    customer = Customer(name=name, email=email)
+    customer = Customer(name, email, appointments=[])
     db.session.add(customer)
     db.session.commit()
 

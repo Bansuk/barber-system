@@ -2,9 +2,15 @@
 This module defines the Service model for the database.
 """
 
+from typing import TYPE_CHECKING
 from datetime import datetime
 from database.db_setup import db
+from .service_appointment import service_appointment
 from .service_employee import service_employee
+
+if TYPE_CHECKING:
+    from database.models.appointment import Appointment
+    from database.models.employee import Employee
 
 
 class Service(db.Model):
@@ -26,9 +32,14 @@ class Service(db.Model):
     price = db.Column(db.Integer, nullable=False)
     employees = db.relationship(
         'Employee', secondary=service_employee, back_populates='services')
+    appointments = db.relationship(
+        'Appointment', secondary=service_appointment, back_populates='services')
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, name: str, price: int) -> None:
+    def __init__(self, name: str, price: int,
+                 employees: list['Employee'], appointments: list['Appointment']) -> None:
         self.name = name
         self.price = price
+        self.employees = employees
+        self.appointments = appointments
