@@ -25,9 +25,10 @@ def add_employee():
     data = request.get_json()
     name = data.get('name')
     email = data.get('email')
+    service_ids = data.get('services')
 
     try:
-        create_employee(name, email)
+        create_employee(name, email, service_ids)
         return jsonify({'message': 'Employee added successfully'}), 201
     except ValidationError as e:
         return jsonify({'errors': e.get_errors()}), 400
