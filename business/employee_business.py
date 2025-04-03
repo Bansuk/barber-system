@@ -31,3 +31,14 @@ def create_employee(name: str, email: str, service_ids: list) -> Employee:
     db.session.commit()
 
     return employee
+
+
+def get_employee(employee_id) -> Employee:
+    """
+    Business class for getting an Employee by its id.
+
+    Returns:
+        Employee: The employee found.
+    """
+
+    return db.session.query(Employee).filter_by(id=employee_id).first()

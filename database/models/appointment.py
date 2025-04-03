@@ -2,7 +2,7 @@
 This module defines the Appointment model for the database.
 """
 from typing import List, TYPE_CHECKING
-from datetime import datetime
+from datetime import datetime, timezone
 from database.db_setup import db
 from .service_appointment import service_appointment
 
@@ -17,7 +17,7 @@ class Appointment(db.Model):
     Attributes:
         id (int): Primary key identifier.
         date (datetime): Date and time of the appointment.
-        services (list): List of services associated with the appointment.
+        services (list[Service]): List of services associated with the appointment.
         employee_id (int): Foreign key referencing the assigned employee.
         customer_id (int): Foreign key referencing the assigned customer.
         created_at (datetime): Timestamp when the record was created.
@@ -36,13 +36,13 @@ class Appointment(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey(
         'customer.id'), nullable=False)
     customers = db.relationship('Customer', back_populates='appointments')
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now)
+        db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     def __init__(self, date: datetime, services: List['Service'],
                  employee_id: int, customer_id: int) -> None:
-        self.date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f")
+        self.date = date
         self.services = services
         self.employee_id = employee_id
         self.customer_id = customer_id

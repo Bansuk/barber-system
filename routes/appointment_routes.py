@@ -14,22 +14,25 @@ def add_appointment():
     """
     Handles the creation of a new appointment.
 
-    Receives a JSON payload with 'name' and 'price',
-    calls the business logic to create a appointment,
+    Receives a JSON payload with 'date', 'customer_id', 'employee_id', and 'services_ids',
+    calls the business logic to create an appointment,
     and returns an appropriate response.
 
     Returns:
-        JSON response with success message (201) or validation errors (400).
+        JSON response:
+        - 201: Appointment created successfully.
+        - 400: Validation error or missing required fields.
     """
 
     data = request.get_json()
-    date = data.get('date')
-    customer_id = data.get('customer_id')
-    employee_id = data.get('employee_id')
-    services_ids = data.get('services_ids')
 
     try:
-        create_appointment(date, customer_id, employee_id, services_ids)
+        create_appointment(
+            date=data['date'],
+            customer_id=data['customer_id'],
+            employee_id=data['employee_id'],
+            services_ids=data['services_ids']
+        )
         return jsonify({'message': 'Appointment added successfully'}), 201
-    except ValidationError as e:
-        return jsonify({'errors': e.get_errors()}), 400
+    except ValidationError as error:
+        return jsonify({'errors': error.get_errors()}), 400
