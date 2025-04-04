@@ -2,7 +2,7 @@
 Repository module for Customer queries.
 """
 
-from typing import Optional
+from typing import List, Optional
 from database.models.customer import Customer
 from database.db_setup import db
 
@@ -33,3 +33,14 @@ def search_customer_email(email: str) -> Optional[str]:
     """
 
     return db.session.query(Customer.email).filter_by(email=email).first()
+
+
+def get_all_customers() -> List[Customer]:
+    """
+    Retrieves all registered customers.
+
+    Returns:
+        List[Customer]: A list of registered customers.
+    """
+
+    return db.session.query(Customer).all()

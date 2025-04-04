@@ -36,3 +36,18 @@ class Customer(db.Model):
         self.name = name
         self.email = email
         self.appointments = appointments
+
+    def to_dict(self):
+        """
+       Converts the Customer instance into a dictionary format.
+
+       Returns:
+           dict: A dictionary containing customer details and associated appointments.
+       """
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "appointments": [appointment.id for appointment in self.appointments]
+        }
