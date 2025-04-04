@@ -1,10 +1,12 @@
 """
 This module defines the Appointment model for the database.
 """
+
 from typing import List, TYPE_CHECKING
 from datetime import datetime, timezone
 from database.db_setup import db
 from .service_appointment import service_appointment
+
 
 if TYPE_CHECKING:
     from .service import Service
@@ -17,7 +19,7 @@ class Appointment(db.Model):
     Attributes:
         id (int): Primary key identifier.
         date (datetime): Date and time of the appointment.
-        services (list[Service]): List of services associated with the appointment.
+        services (List[Service]): List of services associated with the appointment.
         employee_id (int): Foreign key referencing the assigned employee.
         customer_id (int): Foreign key referencing the assigned customer.
         created_at (datetime): Timestamp when the record was created.

@@ -5,6 +5,7 @@ Route module for Appointment routes.
 from flask import Blueprint, request, jsonify
 from business.appointment_business import create_appointment
 from validations.validation_error import ValidationError
+from validations.appointment_validation import AppointmentValidation
 
 appointment_bp = Blueprint('appointment', __name__)
 
@@ -21,18 +22,15 @@ def add_appointment():
     Returns:
         JSON response:
         - 201: Appointment created successfully.
-        - 400: Validation error or missing required fields.
+        - 400: Validation error.
     """
 
     data = request.get_json()
 
     try:
-        create_appointment(
-            date=data['date'],
-            customer_id=data['customer_id'],
-            employee_id=data['employee_id'],
-            services_ids=data['services_ids']
-        )
+
+        AppointmentValidation.validate_appointment_data(data)
+        create_appointment(**data)
         return jsonify({'message': 'Appointment added successfully'}), 201
     except ValidationError as error:
         return jsonify({'errors': error.get_errors()}), 400

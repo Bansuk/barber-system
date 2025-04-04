@@ -2,11 +2,14 @@
 Validation module for Appointment entities.
 """
 
+from typing import List
 from datetime import datetime, timedelta, time
-from validations.validation_error import ValidationError
-from business.service_business import get_service
-from business.employee_business import get_employee
 from business.customer_business import get_customer
+from business.employee_business import get_employee
+from repositories.service_repository import get_service
+from repositories.appointment_repository import get_customer_appointment, get_employee_appointment
+from custom_types.appointment_type import AppointmentData
+from validations.validation_error import ValidationError
 
 
 class AppointmentValidation():
@@ -24,7 +27,7 @@ class AppointmentValidation():
         Validates that the appointment date is in accepted range.
 
         Args:
-            date (datetime): The appointment date.
+            date (datetime): The appointment's date.
 
         Returns:
             bool: True if appointment date is in valid range, False otherwise.
@@ -39,7 +42,7 @@ class AppointmentValidation():
         Validates that the appointment time is in business hours range.
 
         Args:
-            date (datetime): The appointment date.
+            date (datetime): The appointment's date.
 
         Returns:
             bool: True if date is in business hours range, False otherwise.
@@ -48,21 +51,26 @@ class AppointmentValidation():
         return AppointmentValidation.OPENING_TIME <= date.time() < AppointmentValidation.CLOSING_TIME
 
     @staticmethod
-    def _are_services_valid(services_ids) -> bool:
+    def _are_services_valid(services_ids: List[int]) -> bool:
         """
         Checks if all provided services ID's exists.
+
+        Args:
+            services_ids (List[int]): List of service IDs.
 
         Returns:
             bool: True if all servicse were found, False otherwise.
         """
 
-        services = {get_service(service_id).id for service_id in services_ids}
-        return all(service_id in services for service_id in services_ids)
+        return all(get_service(service_id) is not None for service_id in services_ids)
 
     @staticmethod
-    def _is_employee_valid(employee_id) -> bool:
+    def _is_employee_valid(employee_id: int) -> bool:
         """
         Checks if the provided employee exists.
+
+        Args:
+            employee_id (int): The employee's ID.
 
         Returns:
             bool: True if employee was found, False otherwise.
@@ -71,9 +79,12 @@ class AppointmentValidation():
         return get_employee(employee_id) is not None
 
     @staticmethod
-    def _is_customer_valid(customer_id) -> bool:
+    def _is_customer_valid(customer_id: int) -> bool:
         """
         Checks if the provided customer exists.
+
+        Args:
+            customer_id (int): The customer's ID.
 
         Returns:
             bool: True if customer was found, False otherwise.
@@ -88,69 +99,67 @@ class AppointmentValidation():
         for the provided customer or employee.
 
         Args:
-            date (datetime): The appointment date.
+            date (datetime): The appointment's date.
             employee_id (int): The ID of the employee.
             customer_id (int): The ID of the customer.
 
         Returns:
-            bool: True if there is date is available, False otherwise.
+            bool: True if the date is available, False otherwise.
         """
-        from business.appointment_business import get_customer_appointment, get_employee_appointment
 
         return not get_customer_appointment(date, customer_id) and not get_employee_appointment(
             date, employee_id
         )
 
     @staticmethod
-    def _are_inputs_valid(date: datetime, customer_id: int,
-                          employee_id: int, services_ids: list[int]) -> bool:
-        """
-        Validates that all required inputs are provided.
-
-        Args:
-            date (datetime): The appointment date.
-            customer_id (int): The customer's ID.
-            employee_id (int): The employee's ID.
-            services_ids (list[int]): List of service IDs.
-
-        Returns:
-            bool: True if all inputs are valid, False otherwise.
-        """
-
-        return all([date, customer_id, employee_id, services_ids])
-
-    @staticmethod
-    def validate_appointment_data(date: datetime, customer_id: int,
-                                  employee_id: int, services_ids: list[int]):
+    def validate_appointment_data(data: AppointmentData) -> None:
         """
         Validates appointment data.
 
         Args:
-            date (datetime): The appointment date.
-            customer_id (int): The customer's ID.
-            employee_id (int): The employee's ID.
-            services_ids (list[int]): List of service IDs.
+            data (AppointmentData): Data payload.
 
         Raises:
-            ValidationError: If provided email already exists.
+            ValidationError: If any fiels is missing.
         """
 
-        if not AppointmentValidation._are_inputs_valid(date, customer_id,
-                                                       employee_id, services_ids):
-            raise ValidationError({'input': 'Missing params.'})
+        required_fields = {'date', 'customer_id',
+                           'employee_id', 'services_ids'}
+
+        if not all(field in data for field in required_fields):
+            missing_fields = required_fields - data.keys()
+            raise ValidationError(
+                f"Missing fields: {', '.join(missing_fields)}")
+
+    @staticmethod
+    def validate_appointment(date: datetime, customer_id: int,
+                             employee_id: int, services_ids: List[int]) -> None:
+        """
+        Validates appointment.
+
+        Args:
+            date (datetime): The appointment's date.
+            customer_id (int): The customer's ID.
+            employee_id (int): The employee's ID.
+            services_ids (List[int]): List of service IDs.
+
+        Raises:
+            ValidationError: If any validation fails.
+        """
+
         if not AppointmentValidation._is_date_in_valid_range(date):
-            raise ValidationError({'date': 'Invalid date.'})
+            raise ValidationError({'Date': 'Invalid date.'})
         if not AppointmentValidation._is_time_in_business_hours_range(date):
-            raise ValidationError({'date': 'Invalid hour.'})
-        if not AppointmentValidation._are_services_valid(services_ids):
-            raise ValidationError(
-                {'services': 'Provided services were not found.'})
-        if not AppointmentValidation._is_employee_valid(employee_id):
-            raise ValidationError(
-                {'employee': 'Provided employee was not found.'})
-        if not AppointmentValidation._is_customer_valid(customer_id):
-            raise ValidationError(
-                {'customer': 'Provided customer was not found.'})
+            raise ValidationError({'Date': 'Invalid hour.'})
         if not AppointmentValidation._is_date_available(date, employee_id, customer_id):
             raise ValidationError(
-                {'date': 'Date is unavaiable.'})
+                {'Date': 'Date is unavailable.'})
+        if not AppointmentValidation._are_services_valid(services_ids):
+            raise ValidationError(
+                {'Services': 'Provided services were not found.'})
+        if not AppointmentValidation._is_employee_valid(employee_id):
+            raise ValidationError(
+                {'Employee': 'Provided employee was not found.'})
+        if not AppointmentValidation._is_customer_valid(customer_id):
+            raise ValidationError(
+                {'Customer': 'Provided customer was not found.'})

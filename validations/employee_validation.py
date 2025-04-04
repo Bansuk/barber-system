@@ -6,7 +6,7 @@ from database.models import Employee
 from database.db_setup import db
 from validations.user_validation import UserValidation
 from validations.validation_error import ValidationError
-from business.service_business import get_services_count, get_service
+from repositories.service_repository import get_services_count, get_service
 
 
 class EmployeeValidation(UserValidation):
