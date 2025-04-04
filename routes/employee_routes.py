@@ -32,8 +32,8 @@ def add_employee():
         EmployeeValidation.validate_employee_data(data)
         create_employee(**data)
         return jsonify({'message': 'Employee added successfully'}), 201
-    except ValidationError as e:
-        return jsonify({'errors': e.get_errors()}), 400
+    except ValidationError as error:
+        return jsonify({'errors': error.get_errors()}), 400
 
 
 @employee_bp.route('/employees', methods=['GET'])

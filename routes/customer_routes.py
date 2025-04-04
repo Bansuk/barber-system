@@ -32,8 +32,8 @@ def add_customer():
         CustomerValidation.validate_customer_data(data)
         create_customer(**data)
         return jsonify({'message': 'Customer added successfully'}), 201
-    except ValidationError as e:
-        return jsonify({'errors': e.get_errors()}), 400
+    except ValidationError as error:
+        return jsonify({'errors': error.get_errors()}), 400
 
 
 @customer_bp.route('/customers', methods=['GET'])

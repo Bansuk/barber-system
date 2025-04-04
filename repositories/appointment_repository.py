@@ -8,7 +8,7 @@ from database.db_setup import db
 from database.models.appointment import Appointment
 
 
-def get_appointments() -> List[Appointment]:
+def get_all_appointments() -> List[Appointment]:
     """
     Retrieves all registered appointments.
 
