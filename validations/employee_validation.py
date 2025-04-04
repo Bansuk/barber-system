@@ -2,11 +2,13 @@
 Validation module for Employee entities.
 """
 
-from database.models import Employee
-from database.db_setup import db
+from typing import List
+from database.models.service import Service
+from repositories.service_repository import get_services_count, get_service
+from repositories.employee_repository import search_employee_email
+from custom_types.employee_type import EmployeeData
 from validations.user_validation import UserValidation
 from validations.validation_error import ValidationError
-from repositories.service_repository import get_services_count, get_service
 
 
 class EmployeeValidation(UserValidation):
@@ -29,7 +31,7 @@ class EmployeeValidation(UserValidation):
             bool: True if the email exists, False otherwise.
         """
 
-        return db.session.query(Employee.id).filter_by(email=email).first() is not None
+        return search_employee_email(email) is not None
 
     @staticmethod
     def _services_is_empty() -> bool:
@@ -43,44 +45,55 @@ class EmployeeValidation(UserValidation):
         return get_services_count() == 0
 
     @staticmethod
-    def _are_services_not_valid(services) -> bool:
+    def _are_services_valid(services: List[Service]) -> bool:
         """
-        Checks if there is at least one registered Service 
-        to associate to Employee.
+        Checks if the provided Services exists.
 
         Returns:
-            bool: True if there are no Services, False otherwise.
+            bool: True if all Services were found, False otherwise.
         """
 
-        for service in services:
-            found_service = get_service(service_id=service)
-
-            if found_service is None:
-                return True
-
-        return False
+        return bool(services) and all(get_service(service_id=service) is not None for service in services)
 
     @staticmethod
-    def validate_employee_data(name: str, email: str, service_ids: list):
+    def validate_employee_data(data: EmployeeData) -> None:
         """
         Validates employee data.
+
+        Args:
+            data (EmployeeData): Data payload.
+
+        Raises:
+            ValidationError: If any fiels is missing.
+        """
+
+        required_fields = {'name', 'email', 'services'}
+
+        if not all(field in data for field in required_fields):
+            missing_fields = required_fields - data.keys()
+            raise ValidationError(
+                f"Missing fields: {', '.join(missing_fields)}")
+
+    @staticmethod
+    def validate_employee(name: str, email: str, services: list) -> None:
+        """
+        Validates employee.
 
         Args:
             name (str): The employee's name.
             email (str): The employee's email.
 
         Raises:
-            ValidationError: If provided email already exists.
+            ValidationError: If any validation fails.
         """
 
         UserValidation.validate_user_data(name, email)
 
         if EmployeeValidation._email_exists(email):
-            raise ValidationError({'email': 'Email ja cadastrado.'})
+            raise ValidationError({'Employee': 'Email already registered.'})
         if EmployeeValidation._services_is_empty():
             raise ValidationError(
-                {'service': 'Nao e possivel cadastrar um funcionario(a) '
-                 'sem cadastrar um servico primeiro.'})
-        if EmployeeValidation._are_services_not_valid(service_ids):
+                {'Employee': 'A service must be registered before registering an employee'})
+        if not EmployeeValidation._are_services_valid(services):
             raise ValidationError(
-                {'service': 'Servico informado nao foi encontrado.'})
+                {'Employee': 'Service not found.'})

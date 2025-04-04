@@ -2,13 +2,14 @@
 Business module for Employee entities.
 """
 
-from database.models.service import Service
+from typing import List
 from database.models.employee import Employee
 from database.db_setup import db
+from repositories.service_repository import get_services_by_services_ids
 from validations.employee_validation import EmployeeValidation
 
 
-def create_employee(name: str, email: str, service_ids: list) -> Employee:
+def create_employee(name: str, email: str, services: List[int]) -> Employee:
     """
     Business class for creating a new Employee.
 
@@ -21,24 +22,18 @@ def create_employee(name: str, email: str, service_ids: list) -> Employee:
         Employee: Created employee.
     """
 
-    EmployeeValidation.validate_employee_data(
-        name, email, service_ids)
+    EmployeeValidation.validate_employee(
+        name, email, services)
 
-    services = Service.query.filter(Service.id.in_(service_ids)).all()
+    services = get_services_by_services_ids(services_ids=services)
 
     employee = Employee(name, email, services, appointments=[])
-    db.session.add(employee)
-    db.session.commit()
+
+    try:
+        db.session.add(employee)
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        raise error
 
     return employee
-
-
-def get_employee(employee_id) -> Employee:
-    """
-    Business class for getting an Employee by its id.
-
-    Returns:
-        Employee: The employee found.
-    """
-
-    return db.session.query(Employee).filter_by(id=employee_id).first()

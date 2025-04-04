@@ -19,6 +19,18 @@ def get_services() -> List[Service]:
     return db.session.query(Service).all()
 
 
+def get_services_by_services_ids(services_ids: List[int]) -> List[Service]:
+    """
+    Business class for getting all 
+     registered Services.
+
+    Returns:
+        List[Service]: A List of registered services.
+    """
+
+    return db.session.query(Service).filter(Service.id.in_(services_ids)).all()
+
+
 def get_services_count() -> int:
     """
     Business class for getting the number

@@ -37,8 +37,25 @@ class Employee(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, name: str, email: str, services: list['Service'], appointments: list['Appointment']) -> None:
+    def __init__(self, name: str, email: str, services: list['Service'],
+                 appointments: list['Appointment']) -> None:
         self.name = name
         self.email = email
         self.services = services
         self.appointments = appointments
+
+    def to_dict(self):
+        """
+        Converts the Emplyee instance into a dictionary format.
+
+        Returns:
+            dict: A dictionary containing employee details and associated appointments.
+        """
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "services": [service.id for service in self.services],
+            "appointments": [appointment.id for appointment in self.appointments]
+        }

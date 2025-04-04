@@ -4,7 +4,7 @@ Validation module for Appointment entities.
 
 from typing import List
 from datetime import datetime, timedelta, time
-from business.employee_business import get_employee
+from repositories.employee_repository import get_employee
 from repositories.customer_repository import get_customer
 from repositories.service_repository import get_service
 from repositories.appointment_repository import get_customer_appointment, get_employee_appointment

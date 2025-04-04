@@ -43,3 +43,19 @@ class Service(db.Model):
         self.price = price
         self.employees = employees
         self.appointments = appointments
+
+    def to_dict(self):
+        """
+        Converts the Service instance into a dictionary format.
+
+        Returns:
+            dict: A dictionary containing service details and associated employees and appointments.
+        """
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "employees": [employee.id for employee in self.employees],
+            "appointments": [appointment.id for appointment in self.appointments]
+        }

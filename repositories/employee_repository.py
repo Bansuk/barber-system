@@ -1,0 +1,43 @@
+"""
+Repository module for Employee queries.
+"""
+
+from typing import List, Optional
+from database.models.employee import Employee
+from database.db_setup import db
+
+
+def get_employee(employee_id) -> Employee:
+    """
+    Business class for getting an Employee by its id.
+
+    Returns:
+        Employee: The employee found.
+    """
+
+    return db.session.query(Employee).filter_by(id=employee_id).first()
+
+
+def search_employee_email(email: str) -> Optional[str]:
+    """
+    Retrieves an employee email.
+
+    Args:
+        email (str): The employee email to search.
+
+    Returns:
+        str: The email found or None.
+    """
+
+    return db.session.query(Employee.email).filter_by(email=email).first()
+
+
+def get_all_employees() -> List[Employee]:
+    """
+    Retrieves all registered employees.
+
+    Returns:
+        List[Employee]: A list of registered employees.
+    """
+
+    return db.session.query(Employee).all()
