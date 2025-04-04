@@ -1,7 +1,8 @@
 """
 This module defines the Customer model for the database.
 """
-from typing import TYPE_CHECKING
+
+from typing import List, TYPE_CHECKING
 from datetime import datetime, timezone
 from database.db_setup import db
 
@@ -31,7 +32,7 @@ class Customer(db.Model):
     updated_at = db.Column(
         db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
-    def __init__(self, name: str, email: str, appointments: list['Appointment']) -> None:
+    def __init__(self, name: str, email: str, appointments: List['Appointment']) -> None:
         self.name = name
         self.email = email
         self.appointments = appointments

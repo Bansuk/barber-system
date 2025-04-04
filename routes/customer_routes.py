@@ -5,6 +5,7 @@ Route module for Customer routes.
 from flask import Blueprint, request, jsonify
 from business.customer_business import create_customer
 from validations.validation_error import ValidationError
+from validations.customer_validation import CustomerValidation
 
 customer_bp = Blueprint("customer", __name__)
 
@@ -14,20 +15,21 @@ def add_customer():
     """
     Handles the creation of a new customer.
 
-    Receives a JSON payload with 'name' and 'email',
+    Receives a JSON payload with 'name', 'email',
     calls the business logic to create a customer,
     and returns an appropriate response.
 
     Returns:
-        JSON response with success message (201) or validation errors (400).
+        JSON response:
+        - 201: Customer created successfully.
+        - 400: Validation error.
     """
 
     data = request.get_json()
-    name = data.get('name')
-    email = data.get('email')
 
     try:
-        create_customer(name, email)
+        CustomerValidation.validate_customer_data(data)
+        create_customer(**data)
         return jsonify({'message': 'Customer added successfully'}), 201
     except ValidationError as e:
         return jsonify({'errors': e.get_errors()}), 400

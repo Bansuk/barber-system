@@ -2,8 +2,8 @@
 Validation module for Customer entities.
 """
 
-from database.models import Customer
-from database.db_setup import db
+from repositories.customer_repository import search_customer_email
+from custom_types.customer_type import CustomerData
 from validations.user_validation import UserValidation
 from validations.validation_error import ValidationError
 
@@ -28,22 +28,41 @@ class CustomerValidation(UserValidation):
             bool: True if the email exists, False otherwise.
         """
 
-        return db.session.query(Customer.id).filter_by(email=email).first() is not None
+        return search_customer_email(email) is not None
 
     @staticmethod
-    def validate_customer_data(name: str, email: str):
+    def validate_customer_data(data: CustomerData) -> None:
         """
         Validates customer data.
+
+        Args:
+            data (CustomerData): Data payload.
+
+        Raises:
+            ValidationError: If any fiels is missing.
+        """
+
+        required_fields = {'name', 'email'}
+
+        if not all(field in data for field in required_fields):
+            missing_fields = required_fields - data.keys()
+            raise ValidationError(
+                f"Missing fields: {', '.join(missing_fields)}")
+
+    @staticmethod
+    def validate_customer(name: str, email: str) -> None:
+        """
+        Validates customer.
 
         Args:
             name (str): The customer's name.
             email (str): The customer's email.
 
         Raises:
-            ValidationError: If provided email already exists.
+            ValidationError: If any validation fails.
         """
 
         UserValidation.validate_user_data(name, email)
 
         if CustomerValidation._email_exists(email):
-            raise ValidationError({"email": "Email ja cadastrado."})
+            raise ValidationError({"Customer": "Email already registered."})

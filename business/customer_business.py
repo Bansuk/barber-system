@@ -9,7 +9,7 @@ from validations.customer_validation import CustomerValidation
 
 def create_customer(name: str, email: str) -> Customer:
     """
-    Business class for creating a new Customer.
+    Creates a new customer.
 
     Args:
         name (str): The name of the customer.
@@ -19,22 +19,16 @@ def create_customer(name: str, email: str) -> Customer:
         Customer: Created customer.
     """
 
-    CustomerValidation.validate_customer_data(
+    CustomerValidation.validate_customer(
         name, email)
 
     customer = Customer(name, email, appointments=[])
-    db.session.add(customer)
-    db.session.commit()
+
+    try:
+        db.session.add(customer)
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        raise error
 
     return customer
-
-
-def get_customer(customer_id) -> Customer:
-    """
-    Business class for getting an Customer by its id.
-
-    Returns:
-        Customer: The customer found.
-    """
-
-    return db.session.query(Customer).filter_by(id=customer_id).first()

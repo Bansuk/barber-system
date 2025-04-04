@@ -1,0 +1,35 @@
+"""
+Repository module for Customer queries.
+"""
+
+from typing import Optional
+from database.models.customer import Customer
+from database.db_setup import db
+
+
+def get_customer(customer_id: int) -> Optional[Customer]:
+    """
+    Retrieves a customer by its ID.
+
+    Args:
+        customer_id (int): The customer ID.
+
+    Returns:
+        Customer: The customer found or None.
+    """
+
+    return db.session.query(Customer).filter_by(id=customer_id).first()
+
+
+def search_customer_email(email: str) -> Optional[str]:
+    """
+    Retrieves a customer email.
+
+    Args:
+        email (str): The customer email to search.
+
+    Returns:
+        str: The email found or None.
+    """
+
+    return db.session.query(Customer.email).filter_by(email=email).first()

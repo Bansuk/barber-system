@@ -4,8 +4,8 @@ Validation module for Appointment entities.
 
 from typing import List
 from datetime import datetime, timedelta, time
-from business.customer_business import get_customer
 from business.employee_business import get_employee
+from repositories.customer_repository import get_customer
 from repositories.service_repository import get_service
 from repositories.appointment_repository import get_customer_appointment, get_employee_appointment
 from custom_types.appointment_type import AppointmentData
@@ -148,18 +148,18 @@ class AppointmentValidation():
         """
 
         if not AppointmentValidation._is_date_in_valid_range(date):
-            raise ValidationError({'Date': 'Invalid date.'})
+            raise ValidationError({'Appointment': 'Invalid date.'})
         if not AppointmentValidation._is_time_in_business_hours_range(date):
-            raise ValidationError({'Date': 'Invalid hour.'})
+            raise ValidationError({'Appointment': 'Invalid hour.'})
         if not AppointmentValidation._is_date_available(date, employee_id, customer_id):
             raise ValidationError(
-                {'Date': 'Date is unavailable.'})
+                {'Appointment': 'Date is unavailable.'})
         if not AppointmentValidation._are_services_valid(services_ids):
             raise ValidationError(
-                {'Services': 'Provided services were not found.'})
+                {'Appointment': 'Provided services were not found.'})
         if not AppointmentValidation._is_employee_valid(employee_id):
             raise ValidationError(
-                {'Employee': 'Provided employee was not found.'})
+                {'Appointment': 'Provided employee was not found.'})
         if not AppointmentValidation._is_customer_valid(customer_id):
             raise ValidationError(
-                {'Customer': 'Provided customer was not found.'})
+                {'Appointment': 'Provided customer was not found.'})

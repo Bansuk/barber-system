@@ -12,7 +12,7 @@ class UserValidation:
     """
 
     @staticmethod
-    def _validate_name(name: str) -> bool:
+    def _is_name_valid(name: str) -> bool:
         """
         Validate if the user name exists and if its length is larger than 3 characters.
 
@@ -26,9 +26,9 @@ class UserValidation:
         return bool(name and len(name) >= 3)
 
     @staticmethod
-    def _validate_email(email: str) -> bool:
+    def _is_email_valid(email: str) -> bool:
         """
-        Validate the user email.
+        Validate the user email format.
 
         Args:
             email (str): The email to validate.
@@ -40,8 +40,8 @@ class UserValidation:
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         return bool(re.match(email_regex, email))
 
-    @classmethod
-    def validate_user_data(cls, name: str, email: str) -> dict:
+    @staticmethod
+    def validate_user_data(name: str, email: str) -> dict:
         """
         Validate the user data (name and email).
 
@@ -52,12 +52,8 @@ class UserValidation:
         Raises:
             ValidationError: If any validation fails.
         """
-        errors = {}
 
-        if not cls._validate_name(name):
-            errors['name'] = 'O nome precisa ter no minimo 3 caracteres.'
-        if not cls._validate_email(email):
-            errors['email'] = 'Formato de e-mail invalido.'
-
-        if errors:
-            raise ValidationError(errors)
+        if not UserValidation._is_name_valid(name):
+            raise ValidationError({'User': 'Name format is invalid.'})
+        if not UserValidation._is_email_valid(email):
+            raise ValidationError({'User': 'Email format is invalid.'})
