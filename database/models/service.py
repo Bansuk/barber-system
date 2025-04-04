@@ -3,7 +3,7 @@ This module defines the Service model for the database.
 """
 
 from typing import TYPE_CHECKING
-from datetime import datetime
+from datetime import datetime, timezone
 from database.db_setup import db
 from .service_appointment import service_appointment
 from .service_employee import service_employee
@@ -34,8 +34,9 @@ class Service(db.Model):
         'Employee', secondary=service_employee, back_populates='services')
     appointments = db.relationship(
         'Appointment', secondary=service_appointment, back_populates='services')
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     def __init__(self, name: str, price: int,
                  employees: list['Employee'], appointments: list['Appointment']) -> None:

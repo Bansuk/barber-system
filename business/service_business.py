@@ -8,7 +8,7 @@ from validations.service_validation import ServiceValidation
 
 def create_service(name: str, price: int) -> Service:
     """
-    Business class for creating a new Service.
+    Creates a new Service.
 
     Args:
         name (str): The name of the service.
@@ -18,11 +18,15 @@ def create_service(name: str, price: int) -> Service:
         Service: Created service.
     """
 
-    ServiceValidation.validate_service_data(
-        name, price)
+    ServiceValidation.validate_service(name, price)
 
     service = Service(name=name, price=price, employees=[], appointments=[])
-    db.session.add(service)
-    db.session.commit()
+
+    try:
+        db.session.add(service)
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        raise error
 
     return service

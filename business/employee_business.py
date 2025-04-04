@@ -11,7 +11,7 @@ from validations.employee_validation import EmployeeValidation
 
 def create_employee(name: str, email: str, services: List[int]) -> Employee:
     """
-    Business class for creating a new Employee.
+    Creates a new Employee.
 
     Args:
         name (str): The name of the employee.

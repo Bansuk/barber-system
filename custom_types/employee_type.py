@@ -3,8 +3,6 @@ Type module for Employee entities.
 """
 
 from typing import List, TypedDict
-from database.models.service import Service
-from database.models.appointment import Appointment
 
 
 class EmployeeData(TypedDict):
@@ -14,5 +12,4 @@ class EmployeeData(TypedDict):
 
     name: str
     email: int
-    services: List[Service]
-    appointments: List[Appointment]
+    services: List[int]

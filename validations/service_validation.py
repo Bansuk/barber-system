@@ -2,8 +2,8 @@
 Validation module for Service entities.
 """
 
-from database.models import Service
-from database.db_setup import db
+from custom_types.service_type import ServiceData
+from repositories.service_repository import get_service_by_name
 from validations.validation_error import ValidationError
 
 
@@ -13,7 +13,7 @@ class ServiceValidation():
     """
 
     @staticmethod
-    def _is_price_in_invalid_range(price: int) -> bool:
+    def _is_price_in_valid_range(price: int) -> bool:
         """
         Checks if the given price is inside the specified price range.
 
@@ -27,9 +27,7 @@ class ServiceValidation():
         MAX_SERVICE_PRICE = 10000
         MIN_SERVICE_PRICE = 2500
 
-        if price < MIN_SERVICE_PRICE or price > MAX_SERVICE_PRICE:
-            return True
-        return False
+        return MIN_SERVICE_PRICE <= price <= MAX_SERVICE_PRICE
 
     @staticmethod
     def _is_service_already_registered(name: str) -> bool:
@@ -43,22 +41,42 @@ class ServiceValidation():
             bool: True if the service exists, False otherwise.
         """
 
-        return db.session.query(Service.id).filter_by(name=name).first() is not None
+        return get_service_by_name(name) is not None
 
     @staticmethod
-    def validate_service_data(name: str, price: int):
+    def validate_service_data(data: ServiceData) -> None:
         """
         Validates service data.
+
+        Args:
+            data (ServiceData): Data payload.
+
+        Raises:
+            ValidationError: If any fiels is missing.
+        """
+
+        required_fields = {'name', 'price'}
+
+        if not all(field in data for field in required_fields):
+            missing_fields = required_fields - data.keys()
+            raise ValidationError(
+                f"Missing fields: {', '.join(missing_fields)}")
+
+    @staticmethod
+    def validate_service(name: str, price: int) -> None:
+        """
+        Validates service.
 
         Args:
             name (str): The service's name.
             price (int): The service's price.
 
         Raises:
-            ValidationError: If provided service already exists or provided price is out of range.
+            ValidationError: If any validation fails.
         """
 
         if ServiceValidation._is_service_already_registered(name):
-            raise ValidationError({'service': 'Servico ja cadastrado.'})
-        if ServiceValidation._is_price_in_invalid_range(price):
-            raise ValidationError({'price': 'Preco invalido.'})
+            raise ValidationError(
+                {'Service': 'Service is already registered.'})
+        if not ServiceValidation._is_price_in_valid_range(price):
+            raise ValidationError({'Service': 'Invalid price.'})

@@ -2,15 +2,14 @@
 Repository module for Service queries.
 """
 
-from typing import List
+from typing import List, Optional
 from database.models.service import Service
 from database.db_setup import db
 
 
-def get_services() -> List[Service]:
+def get_all_services() -> List[Service]:
     """
-    Business class for getting all 
-     registered Services.
+    Retrieves all registered services.
 
     Returns:
         List[Service]: A List of registered services.
@@ -21,8 +20,11 @@ def get_services() -> List[Service]:
 
 def get_services_by_services_ids(services_ids: List[int]) -> List[Service]:
     """
-    Business class for getting all 
-     registered Services.
+    Retrieves all registered services by ID's.
+
+
+    Args:
+        services_ids (List[int]): The services ID's to search.
 
     Returns:
         List[Service]: A List of registered services.
@@ -33,22 +35,38 @@ def get_services_by_services_ids(services_ids: List[int]) -> List[Service]:
 
 def get_services_count() -> int:
     """
-    Business class for getting the number
-     of registered Services.
+    Retrieves the number of registered services.
 
     Returns:
-        int: The number of registered services.
+        int: The total number of services.
     """
 
     return db.session.query(Service).count()
 
 
-def get_service(service_id) -> Service:
+def get_service(service_id: int) -> Optional[Service]:
     """
-    Business class for getting a Service by its id.
+    Retrieves a service by its ID.
+
+    Args:
+        service_id (int): The service ID.
 
     Returns:
-        Service: The service found.
+        Service: The service found or None.
     """
 
     return db.session.query(Service).filter_by(id=service_id).first()
+
+
+def get_service_by_name(name: str) -> Optional[Service]:
+    """
+    Retrieves a service by its name.
+
+    Args:
+        name (str): The service name.
+
+    Returns:
+        Service: The service found or None.
+    """
+
+    return db.session.query(Service.name).filter_by(name=name).first()

@@ -7,12 +7,15 @@ from database.models.employee import Employee
 from database.db_setup import db
 
 
-def get_employee(employee_id) -> Employee:
+def get_employee(employee_id: int) -> Optional[Employee]:
     """
     Business class for getting an Employee by its id.
 
+    Args:
+        employee_id (int): The employee id to search.
+
     Returns:
-        Employee: The employee found.
+        Employee: The employee found or None.
     """
 
     return db.session.query(Employee).filter_by(id=employee_id).first()

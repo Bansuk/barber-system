@@ -2,7 +2,7 @@
 This module defines the Employee model for the database.
 """
 from typing import TYPE_CHECKING
-from datetime import datetime
+from datetime import datetime, timezone
 from database.db_setup import db
 from .service_employee import service_employee
 
@@ -34,8 +34,9 @@ class Employee(db.Model):
         'Service', secondary=service_employee, back_populates='employees')
     appointments = db.relationship(
         'Appointment', back_populates='employees')
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     def __init__(self, name: str, email: str, services: list['Service'],
                  appointments: list['Appointment']) -> None:
