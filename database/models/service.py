@@ -53,9 +53,9 @@ class Service(db.Model):
         """
 
         return {
-            "id": self.id,
-            "name": self.name,
-            "price": self.price,
-            "employees": [employee.id for employee in self.employees],
-            "appointments": [appointment.id for appointment in self.appointments]
+            'id': self.id,
+            'name': self.name,
+            'price': self.price,
+            'employees': [employee.id for employee in self.employees],
+            'appointments': [appointment.id for appointment in self.appointments]
         }

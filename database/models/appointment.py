@@ -26,7 +26,7 @@ class Appointment(db.Model):
         updated_at (datetime): Timestamp when the record was last updated.
     """
 
-    __tablename__ = "appointment"
+    __tablename__ = 'appointment'
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
@@ -58,9 +58,9 @@ class Appointment(db.Model):
         """
 
         return {
-            "id": self.id,
-            "date": self.date.isoformat(),
-            "services": [service.id for service in self.services],
-            "employee_id": self.employee_id,
-            "customer_id": self.customer_id,
+            'id': self.id,
+            'date': self.date.isoformat(),
+            'services': [service.id for service in self.services],
+            'employee_id': self.employee_id,
+            'customer_id': self.customer_id,
         }

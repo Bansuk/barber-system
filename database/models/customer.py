@@ -46,8 +46,8 @@ class Customer(db.Model):
        """
 
         return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email,
-            "appointments": [appointment.id for appointment in self.appointments]
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'appointments': [appointment.id for appointment in self.appointments]
         }

@@ -53,9 +53,9 @@ class Employee(db.Model):
         """
 
         return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email,
-            "services": [service.id for service in self.services],
-            "appointments": [appointment.id for appointment in self.appointments]
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'services': [service.id for service in self.services],
+            'appointments': [appointment.id for appointment in self.appointments]
         }

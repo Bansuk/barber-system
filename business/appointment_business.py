@@ -25,7 +25,7 @@ def create_appointment(date: str, customer_id: int,
         Appointment: Created appointment.
     """
 
-    date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f")
+    date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
 
     AppointmentValidation.validate_appointment(date,
                                                customer_id, employee_id, services_ids)

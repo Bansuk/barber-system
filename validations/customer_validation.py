@@ -65,4 +65,4 @@ class CustomerValidation(UserValidation):
         UserValidation.validate_user_data(name, email)
 
         if CustomerValidation._email_exists(email):
-            raise ValidationError({"Customer": "Email already registered."})
+            raise ValidationError({'Customer': 'Email already registered.'})
