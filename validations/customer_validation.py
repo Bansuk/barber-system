@@ -38,4 +38,8 @@ class CustomerValidation():
         """
 
         if CustomerValidation._email_exists(email):
-            abort(409, message="Email already registered.")
+            abort(409, errors={
+                "json": {
+                    "email": ["Email already registered."]
+                }
+            })

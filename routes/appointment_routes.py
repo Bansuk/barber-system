@@ -8,7 +8,7 @@ from business.appointment_business import create_appointment
 from repositories.appointment_repository import get_all_appointments
 
 appointment_bp = SmorestBlueprint(
-    'appointment', __name__, description='Operations on appointments')
+    'Appointment', __name__, description='Operations on appointments')
 
 
 @appointment_bp.route('/appointments', methods=['POST'])
