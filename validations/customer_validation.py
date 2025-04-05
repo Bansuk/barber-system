@@ -10,8 +10,7 @@ class CustomerValidation():
     """
     Validation class for Customer entities.
 
-    Adds additional checks, such as
-    verifying whether an email is already registered in the Customer table.
+    Verify whether an email is already registered in the Customer table.
     """
 
     @staticmethod
@@ -37,7 +36,7 @@ class CustomerValidation():
             email (str): The customer's email.
 
         Raises:
-            ValidationError: If any validation fails.
+            HTTPException: If any validation fails.
         """
 
         if CustomerValidation._email_exists(email):

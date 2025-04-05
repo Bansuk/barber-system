@@ -15,15 +15,14 @@ def create_employee(name: str, email: str, services: List[int]) -> Employee:
 
     Args:
         name (str): The name of the employee.
-        email (str): The email of the employee.
-        services (List): The list of services performed by the employee.
+        email (str): The employee's email address.
+        services (List[int]): The list of services performed by the employee.
 
     Returns:
         Employee: Created employee.
     """
 
-    EmployeeValidation.validate_employee(
-        name, email, services)
+    EmployeeValidation.validate_employee(email, services)
 
     services = get_services_by_services_ids(services_ids=services)
 
@@ -32,8 +31,8 @@ def create_employee(name: str, email: str, services: List[int]) -> Employee:
     try:
         db.session.add(employee)
         db.session.commit()
+
+        return employee
     except Exception as error:
         db.session.rollback()
         raise error
-
-    return employee

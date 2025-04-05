@@ -44,19 +44,3 @@ class Employee(db.Model):
         self.email = email
         self.services = services
         self.appointments = appointments
-
-    def to_dict(self):
-        """
-        Converts the Emplyee instance into a dictionary format.
-
-        Returns:
-            dict: A dictionary containing employee details and associated appointments.
-        """
-
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'services': [service.id for service in self.services],
-            'appointments': [appointment.id for appointment in self.appointments]
-        }

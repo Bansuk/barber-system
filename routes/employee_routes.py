@@ -2,17 +2,19 @@
 Route module for Employee routes.
 """
 
-from flask import Blueprint, request, jsonify
+from flask_smorest import Blueprint as SmorestBlueprint
+from schemas.employee_schema import EmployeeSchema, EmployeeViewSchema
 from business.employee_business import create_employee
 from repositories.employee_repository import get_all_employees
-from validations.employee_validation import EmployeeValidation
-from validations.validation_error import ValidationError
 
-employee_bp = Blueprint('employee', __name__)
+employee_bp = SmorestBlueprint(
+    'Employee', __name__, description='Operations on employees')
 
 
 @employee_bp.route('/employees', methods=['POST'])
-def add_employee():
+@employee_bp.arguments(EmployeeSchema)
+@employee_bp.response(201, EmployeeViewSchema, description='Employee successfully created')
+def add_employee(employee_data):
     """
     Handles the creation of a new employee.
 
@@ -26,17 +28,11 @@ def add_employee():
         - 400: Validation error.
     """
 
-    data = request.get_json()
-
-    try:
-        EmployeeValidation.validate_employee_data(data)
-        create_employee(**data)
-        return jsonify({'message': 'Employee added successfully'}), 201
-    except ValidationError as error:
-        return jsonify({'errors': error.get_errors()}), 400
+    return create_employee(**employee_data)
 
 
 @employee_bp.route('/employees', methods=['GET'])
+@employee_bp.response(200, EmployeeViewSchema(many=True))
 def get_employees():
     """
     Retrieves a list of all employees.
@@ -46,5 +42,4 @@ def get_employees():
         - 200: List of employees retrieved successfully.
     """
 
-    employees = get_all_employees()
-    return jsonify([employee.to_dict() for employee in employees]), 200
+    return get_all_employees()

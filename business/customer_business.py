@@ -31,21 +31,3 @@ def create_customer(name: str, email: str) -> Customer:
     except Exception as error:
         db.session.rollback()
         raise error
-
-
-def display_customer(customer: Customer) -> dict:
-    """
-   Converts the Customer instance into a dictionary format.
-
-    Args:
-        customer (Customer): A Customer object.
-
-   Returns:
-       dict: A dictionary containing customer details.
-   """
-
-    return {
-        'id': customer.id,
-        'name': customer.name,
-        'email': customer.email,
-    }
