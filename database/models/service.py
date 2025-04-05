@@ -22,7 +22,7 @@ class Service(db.Model):
         name (str): Name of the service.
         price (int): Price of the service.
         employees (list): List of employees that can perform the service.
-        appointments (list): List of appointments with service.
+        appointments (list): List of appointments with assigned service.
         created_at (datetime): Timestamp when the record was created.
         updated_at (datetime): Timestamp when the record was last updated.
     """

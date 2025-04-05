@@ -22,7 +22,6 @@ def get_services_by_services_ids(services_ids: List[int]) -> List[Service]:
     """
     Retrieves all registered services by ID's.
 
-
     Args:
         services_ids (List[int]): The services ID's to search.
 

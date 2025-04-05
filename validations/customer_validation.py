@@ -9,8 +9,6 @@ from repositories.customer_repository import search_customer_email
 class CustomerValidation():
     """
     Validation class for Customer entities.
-
-    Verify whether an email is already registered in the Customer table.
     """
 
     @staticmethod

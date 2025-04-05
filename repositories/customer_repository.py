@@ -12,7 +12,7 @@ def get_customer(customer_id: int) -> Optional[Customer]:
     Retrieves a customer by its ID.
 
     Args:
-        customer_id (int): The customer ID.
+        customer_id (int): The customer's ID.
 
     Returns:
         Customer: The customer found or None.
@@ -26,7 +26,7 @@ def search_customer_email(email: str) -> Optional[str]:
     Retrieves a customer email.
 
     Args:
-        email (str): The customer email to search.
+        email (str): The customer's email to search.
 
     Returns:
         str: The email found or None.

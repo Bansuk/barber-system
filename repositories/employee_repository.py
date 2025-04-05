@@ -9,7 +9,7 @@ from database.db_setup import db
 
 def get_employee(employee_id: int) -> Optional[Employee]:
     """
-    Business class for getting an Employee by its id.
+    Retrieves an employee by its ID.
 
     Args:
         employee_id (int): The employee id to search.

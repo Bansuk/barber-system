@@ -12,9 +12,6 @@ from repositories.employee_repository import search_employee_email
 class EmployeeValidation():
     """
     Validation class for Employee entities.
-
-    Adds additional checks, such as
-    verifying whether an email is already registered in the Employee table.
     """
 
     @staticmethod
@@ -47,6 +44,9 @@ class EmployeeValidation():
         """
         Checks if the provided Services exists.
 
+        Args:
+            services (List[Service]): List of Services.
+
         Returns:
             bool: True if all Services were found, False otherwise.
         """
@@ -54,13 +54,13 @@ class EmployeeValidation():
         return bool(services) and all(get_service(service_id=service) is not None for service in services)
 
     @staticmethod
-    def validate_employee(email: str, services: list) -> None:
+    def validate_employee(email: str, services: List[Service]) -> None:
         """
         Validates employee.
 
         Args:
-            name (str): The employee's name.
-            email (str): The employee's email.
+            email (str): The employee's name.
+            services (List[Service]): List of Services.
 
         Raises:
             HTTPException: If any validation fails.
@@ -68,8 +68,10 @@ class EmployeeValidation():
 
         if EmployeeValidation._email_exists(email):
             abort(409, message="Email already registered.")
+
         if EmployeeValidation._services_is_empty():
             abort(
                 422, message="A service must be registered before registering an employee.")
+
         if not EmployeeValidation._are_services_valid(services):
             abort(404, message="Service not found.")

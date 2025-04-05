@@ -5,7 +5,7 @@ Schema module for Appointment entities.
 from marshmallow import Schema, fields, validate
 
 DATE_METADATA = metadata = {
-    'example': '2025-04-04 14:30:00'}
+    'example': '2025-04-18 14:30:00'}
 NAME_DESCRIPTION = 'Dia e hora do agendamento.'
 CUSTOMER_METADATA = metadata = {
     'example': 1}
@@ -17,11 +17,13 @@ EMPLOYEE_DESCRIPTION = 'ID do funcionário(a) que irá executar o serviço.'
 
 class AppointmentSchema(Schema):
     """
-    Schema for validating and serializing service input data.
+    Schema for validating and serializing Appointment input data.
 
     Attributes:
-        name (str): The name of the service (min 3, max 100 characters).
-        price (int): The service's price.
+        date (datetime): The appointment's date.
+        customer_id (int): The customer's ID.
+        employee_id (int): The employee's ID.
+        services_ids (List[int]): List of service IDs.
     """
 
     date = fields.Str(required=True, metadata=DATE_METADATA,
@@ -41,20 +43,20 @@ class AppointmentSchema(Schema):
 
 class AppointmentViewSchema(Schema):
     """
-    Schema for serializing employee data for output.
+    Schema for serializing Appointment data for output.
 
     Attributes:
-        id (int): The unique identifier of the employee.
-        name (str): The name of the employee.
-        email (str): The employee's email address.
-        employees (List[int]): The list of employees that can performe the service.
-        appointment (List[int]): The list of appointment containing the service.
+        id (int): The unique identifier of the appointment.
+        date (datetime): The appointment's date.
+        customer_id (int): The customer's ID.
+        employee_id (int): The employee's ID.
+        services_ids (List[int]): List of service IDs.
     """
 
     id = fields.Int(dump_only=True)
     date = fields.Str(required=True)
-    employee_id = fields.Int()
     customer_id = fields.Int()
+    employee_id = fields.Int()
     services_ids = fields.List(
         fields.Pluck('ServiceViewSchema', 'id'),
         required=True,

@@ -12,8 +12,8 @@ def create_customer(name: str, email: str) -> Customer:
     Creates a new customer.
 
     Args:
-        name (str): The name of the customer.
-        email (str): The email of the customer.
+        name (str): The customer's name.
+        email (str): The customer's email.
 
     Returns:
         Customer: Created customer.

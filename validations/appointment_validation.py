@@ -99,8 +99,8 @@ class AppointmentValidation():
 
         Args:
             date (datetime): The appointment's date.
-            employee_id (int): The ID of the employee.
-            customer_id (int): The ID of the customer.
+            employee_id (int): The employee's ID.
+            customer_id (int): The customer's ID.
 
         Returns:
             bool: True if the date is available, False otherwise.
@@ -123,7 +123,7 @@ class AppointmentValidation():
             services_ids (List[int]): List of service IDs.
 
         Raises:
-            ValidationError: If any validation fails.
+            HTTPException: If any validation fails.
         """
 
         if not AppointmentValidation._is_date_in_valid_range(date):

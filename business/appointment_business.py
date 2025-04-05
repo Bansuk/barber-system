@@ -17,9 +17,9 @@ def create_appointment(date: str, customer_id: int,
 
     Args:
         date (str): The appointment's date.
-        customer_id (int): The customer's ID.
-        employee_id (int): The employee's ID.
-        services_ids (List[int]): List of service IDs.
+        customer_id (int): The customer's ID who booked the service.
+        employee_id (int): The employee's ID who will execute the service.
+        services_ids (List[int]): The list of service IDs that will be executed.
 
     Returns:
         Appointment: Created appointment.

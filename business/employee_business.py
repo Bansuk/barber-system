@@ -14,8 +14,8 @@ def create_employee(name: str, email: str, services: List[int]) -> Employee:
     Creates a new Employee.
 
     Args:
-        name (str): The name of the employee.
-        email (str): The employee's email address.
+        name (str): The employee's name.
+        email (str): The employee's email.
         services (List[int]): The list of services performed by the employee.
 
     Returns:

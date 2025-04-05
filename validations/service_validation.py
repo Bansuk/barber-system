@@ -57,5 +57,6 @@ class ServiceValidation():
 
         if ServiceValidation._is_service_already_registered(name):
             abort(409, message="Service is already registered.")
+
         if not ServiceValidation._is_price_in_valid_range(price):
             abort(422, message="Invalid price.")

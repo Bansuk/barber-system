@@ -1,6 +1,7 @@
 """
 This module defines the Employee model for the database.
 """
+
 from typing import TYPE_CHECKING
 from datetime import datetime, timezone
 from database.db_setup import db
