@@ -3,7 +3,6 @@ Schema module for Employee entities.
 """
 
 from marshmallow import Schema, fields, validate
-from schemas.service_schema import ServiceViewSchema
 
 NAME_METADATA = metadata = {
     'example': 'Fulano de Tal'}
@@ -53,7 +52,7 @@ class EmployeeViewSchema(Schema):
     email = fields.Email(
         required=True, metadata=EMAIL_METADATA, description=EMAIL_DESCRIPTION)
     services = fields.List(
-        fields.Pluck(ServiceViewSchema, 'id'),
+        fields.Pluck('ServiceViewSchema', 'id'),
         required=True,
         metadata={'example': '[1, 6]'},
         description='List of service IDs associated with the customer',

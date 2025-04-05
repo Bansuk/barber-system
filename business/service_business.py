@@ -1,6 +1,7 @@
 """
 Business module for Service entities.
 """
+
 from database.models.service import Service
 from database.db_setup import db
 from validations.service_validation import ServiceValidation
@@ -25,8 +26,8 @@ def create_service(name: str, price: int) -> Service:
     try:
         db.session.add(service)
         db.session.commit()
+
+        return service
     except Exception as error:
         db.session.rollback()
         raise error
-
-    return service

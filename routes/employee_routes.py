@@ -19,7 +19,7 @@ def add_employee(employee_data):
     Handles the creation of a new employee.
 
     Receives a JSON payload with 'name', 'email' and 
-    'services;, calls the business logic to create a 
+    'services, calls the business logic to create a 
     employee, and returns an appropriate response.
 
     Returns:

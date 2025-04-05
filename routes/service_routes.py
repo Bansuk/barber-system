@@ -2,17 +2,19 @@
 Route module for Service routes.
 """
 
-from flask import Blueprint, request, jsonify
+from flask_smorest import Blueprint as SmorestBlueprint
+from schemas.service_schema import ServiceSchema, ServiceViewSchema
 from business.service_business import create_service
 from repositories.service_repository import get_all_services
-from validations.service_validation import ServiceValidation
-from validations.validation_error import ValidationError
 
-service_bp = Blueprint('service', __name__)
+service_bp = SmorestBlueprint(
+    'Service', __name__, description='Operations on services')
 
 
 @service_bp.route('/services', methods=['POST'])
-def add_service():
+@service_bp.arguments(ServiceSchema)
+@service_bp.response(201, ServiceViewSchema, description='Service successfully created')
+def add_service(service_data):
     """
     Handles the creation of a new service.
 
@@ -24,17 +26,11 @@ def add_service():
         JSON response with success message (201) or validation errors (400).
     """
 
-    data = request.get_json()
-
-    try:
-        ServiceValidation.validate_service_data(data)
-        create_service(**data)
-        return jsonify({'message': 'Service added successfully'}), 201
-    except ValidationError as error:
-        return jsonify({'errors': error.get_errors()}), 400
+    return create_service(**service_data)
 
 
 @service_bp.route('/services', methods=['GET'])
+@service_bp.response(200, ServiceViewSchema(many=True))
 def get_services():
     """
     Retrieves a list of all services.
@@ -44,5 +40,4 @@ def get_services():
         - 200: List of services retrieved successfully.
     """
 
-    services = get_all_services()
-    return jsonify([service.to_dict() for service in services]), 200
+    return get_all_services()

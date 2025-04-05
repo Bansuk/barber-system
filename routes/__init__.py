@@ -19,5 +19,5 @@ def register_routes(api: Api):
 
     api.register_blueprint(customer_bp)
     api.register_blueprint(employee_bp)
- #   api.register_blueprint(service_bp)
- #   api.register_blueprint(appointment_bp)
+    api.register_blueprint(service_bp)
+    api.register_blueprint(appointment_bp)

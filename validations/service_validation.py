@@ -2,9 +2,11 @@
 Validation module for Service entities.
 """
 
-from custom_types.service_type import ServiceData
+from flask_smorest import abort
 from repositories.service_repository import get_service_by_name
-from validations.validation_error import ValidationError
+
+MAX_SERVICE_PRICE = 10000
+MIN_SERVICE_PRICE = 2500
 
 
 class ServiceValidation():
@@ -24,9 +26,6 @@ class ServiceValidation():
             bool: True if the price is in valid price range, False otherwise.
         """
 
-        MAX_SERVICE_PRICE = 10000
-        MIN_SERVICE_PRICE = 2500
-
         return MIN_SERVICE_PRICE <= price <= MAX_SERVICE_PRICE
 
     @staticmethod
@@ -44,25 +43,6 @@ class ServiceValidation():
         return get_service_by_name(name) is not None
 
     @staticmethod
-    def validate_service_data(data: ServiceData) -> None:
-        """
-        Validates service data.
-
-        Args:
-            data (ServiceData): Data payload.
-
-        Raises:
-            ValidationError: If any fiels is missing.
-        """
-
-        required_fields = {'name', 'price'}
-
-        if not all(field in data for field in required_fields):
-            missing_fields = required_fields - data.keys()
-            raise ValidationError(
-                f"Missing fields: {', '.join(missing_fields)}")
-
-    @staticmethod
     def validate_service(name: str, price: int) -> None:
         """
         Validates service.
@@ -72,11 +52,10 @@ class ServiceValidation():
             price (int): The service's price.
 
         Raises:
-            ValidationError: If any validation fails.
+            HTTPException: If any validation fails.
         """
 
         if ServiceValidation._is_service_already_registered(name):
-            raise ValidationError(
-                {'Service': 'Service is already registered.'})
+            abort(409, message="Service is already registered.")
         if not ServiceValidation._is_price_in_valid_range(price):
-            raise ValidationError({'Service': 'Invalid price.'})
+            abort(422, message="Invalid price.")
