@@ -2,49 +2,55 @@
 Route module for Customer routes.
 """
 
-from flask import Blueprint, request, jsonify
+from flask_smorest import Blueprint as SmorestBlueprint
+from schemas.customer_schema import CustomerSchema, CustomerViewSchema
 from business.customer_business import create_customer
 from repositories.customer_repository import get_all_customers
-from validations.validation_error import ValidationError
-from validations.customer_validation import CustomerValidation
 
-customer_bp = Blueprint('customer', __name__)
+customer_bp = SmorestBlueprint(
+    'Customer', __name__, description='Operations on customers')
 
 
-@customer_bp.route('/customers', methods=['POST'])
-def add_customer():
+@customer_bp.route('/customer', methods=['POST'])
+@customer_bp.arguments(CustomerSchema)
+@customer_bp.response(201, CustomerViewSchema, description='Customer successfully created')
+def add_customer(customer_data):
     """
     Handles the creation of a new customer.
 
-    Receives a JSON payload with 'name', 'email',
-    calls the business logic to create a customer,
-    and returns an appropriate response.
+    This endpoint processes a form submission to create a new customer record.
 
-    Returns:
-        JSON response:
-        - 201: Customer created successfully.
-        - 400: Validation error.
+    Responses:                                                              
+
+        201 Created:
+        - Customer successfully created.
+        - The response body contains the newly created customer object.
+
+        409 Conflict:
+        - Email already registered.
+        - The response body contains an error message.
+
+        422 Unprocessable Entity:
+        - Validation error (e.g., invalid email format).
+        - The response body contains details about the issue.
     """
 
-    data = request.get_json()
-
-    try:
-        CustomerValidation.validate_customer_data(data)
-        create_customer(**data)
-        return jsonify({'message': 'Customer added successfully'}), 201
-    except ValidationError as error:
-        return jsonify({'errors': error.get_errors()}), 400
+    return create_customer(**customer_data)
 
 
 @customer_bp.route('/customers', methods=['GET'])
+@customer_bp.response(200, CustomerViewSchema(many=True))
 def get_customers():
     """
-    Retrieves a list of all customers.
+    Retrieve a list of all customers.
 
-    Returns:
-        JSON response:
-        - 200: List of customers retrieved successfully.
+    This endpoint returns a collection of customer records in JSON format.
+
+    Responses:
+
+        200 OK: 
+        - Successfully retrieved the list of customers.
+        - The response body contains an array of customer objects.
     """
 
-    customers = get_all_customers()
-    return jsonify([customer.to_dict() for customer in customers]), 200
+    return get_all_customers()

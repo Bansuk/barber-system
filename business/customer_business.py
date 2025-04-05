@@ -19,16 +19,33 @@ def create_customer(name: str, email: str) -> Customer:
         Customer: Created customer.
     """
 
-    CustomerValidation.validate_customer(
-        name, email)
+    CustomerValidation.validate_customer(email)
 
     customer = Customer(name, email, appointments=[])
 
     try:
         db.session.add(customer)
         db.session.commit()
+
+        return customer
     except Exception as error:
         db.session.rollback()
         raise error
 
-    return customer
+
+def display_customer(customer: Customer) -> dict:
+    """
+   Converts the Customer instance into a dictionary format.
+
+    Args:
+        customer (Customer): A Customer object.
+
+   Returns:
+       dict: A dictionary containing customer details.
+   """
+
+    return {
+        'id': customer.id,
+        'name': customer.name,
+        'email': customer.email,
+    }
