@@ -2,17 +2,19 @@
 Route module for Appointment routes.
 """
 
-from flask import Blueprint, request, jsonify
+from flask_smorest import Blueprint as SmorestBlueprint
+from schemas.appointment_schema import AppointmentSchema, AppointmentViewSchema
 from business.appointment_business import create_appointment
 from repositories.appointment_repository import get_all_appointments
-from validations.validation_error import ValidationError
-from validations.appointment_validation import AppointmentValidation
 
-appointment_bp = Blueprint('appointment', __name__)
+appointment_bp = SmorestBlueprint(
+    'appointment', __name__, description='Operations on appointments')
 
 
 @appointment_bp.route('/appointments', methods=['POST'])
-def add_appointment():
+@appointment_bp.arguments(AppointmentSchema)
+@appointment_bp.response(201, AppointmentViewSchema, description='Appointment successfully created')
+def add_appointment(apointment_data):
     """
     Handles the creation of a new appointment.
 
@@ -26,18 +28,11 @@ def add_appointment():
         - 400: Validation error.
     """
 
-    data = request.get_json()
-
-    try:
-
-        AppointmentValidation.validate_appointment_data(data)
-        create_appointment(**data)
-        return jsonify({'message': 'Appointment added successfully'}), 201
-    except ValidationError as error:
-        return jsonify({'errors': error.get_errors()}), 400
+    return create_appointment(**apointment_data)
 
 
 @appointment_bp.route('/appointments', methods=['GET'])
+@appointment_bp.response(200, AppointmentViewSchema(many=True))
 def get_appointments():
     """
     Retrieves a list of all appointments.
@@ -47,5 +42,4 @@ def get_appointments():
         - 200: List of appointments retrieved successfully.
     """
 
-    appointments = get_all_appointments()
-    return jsonify([appointment.to_dict() for appointment in appointments]), 200
+    return get_all_appointments()

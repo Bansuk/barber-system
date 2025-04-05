@@ -48,19 +48,3 @@ class Appointment(db.Model):
         self.services = services
         self.employee_id = employee_id
         self.customer_id = customer_id
-
-    def to_dict(self):
-        """
-        Converts the Appointment instance into a dictionary format.
-
-        Returns:
-            dict: A dictionary containing appointment details and associated services.
-        """
-
-        return {
-            'id': self.id,
-            'date': self.date.isoformat(),
-            'services': [service.id for service in self.services],
-            'employee_id': self.employee_id,
-            'customer_id': self.customer_id,
-        }

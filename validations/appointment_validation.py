@@ -4,12 +4,11 @@ Validation module for Appointment entities.
 
 from typing import List
 from datetime import datetime, timedelta, time
+from flask_smorest import abort
 from repositories.employee_repository import get_employee
 from repositories.customer_repository import get_customer
 from repositories.service_repository import get_service
 from repositories.appointment_repository import get_customer_appointment, get_employee_appointment
-from custom_types.appointment_type import AppointmentData
-from validations.validation_error import ValidationError
 
 
 class AppointmentValidation():
@@ -112,26 +111,6 @@ class AppointmentValidation():
         )
 
     @staticmethod
-    def validate_appointment_data(data: AppointmentData) -> None:
-        """
-        Validates appointment data.
-
-        Args:
-            data (AppointmentData): Data payload.
-
-        Raises:
-            ValidationError: If any fiels is missing.
-        """
-
-        required_fields = {'date', 'customer_id',
-                           'employee_id', 'services_ids'}
-
-        if not all(field in data for field in required_fields):
-            missing_fields = required_fields - data.keys()
-            raise ValidationError(
-                f"Missing fields: {', '.join(missing_fields)}")
-
-    @staticmethod
     def validate_appointment(date: datetime, customer_id: int,
                              employee_id: int, services_ids: List[int]) -> None:
         """
@@ -148,18 +127,19 @@ class AppointmentValidation():
         """
 
         if not AppointmentValidation._is_date_in_valid_range(date):
-            raise ValidationError({'Appointment': 'Invalid date.'})
+            abort(400, message='Invalid date.')
+
         if not AppointmentValidation._is_time_in_business_hours_range(date):
-            raise ValidationError({'Appointment': 'Invalid hour.'})
+            abort(400, message='Invalid hour.')
+
         if not AppointmentValidation._is_date_available(date, employee_id, customer_id):
-            raise ValidationError(
-                {'Appointment': 'Date is unavailable.'})
+            abort(409, message='Date is unavailable.')
+
         if not AppointmentValidation._are_services_valid(services_ids):
-            raise ValidationError(
-                {'Appointment': 'Provided services were not found.'})
+            abort(404, message='Provided services were not found.')
+
         if not AppointmentValidation._is_employee_valid(employee_id):
-            raise ValidationError(
-                {'Appointment': 'Provided employee was not found.'})
+            abort(404, message='Provided employee was not found.')
+
         if not AppointmentValidation._is_customer_valid(customer_id):
-            raise ValidationError(
-                {'Appointment': 'Provided customer was not found.'})
+            abort(404, message='Provided customer was not found.')
