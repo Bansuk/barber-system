@@ -6,13 +6,18 @@ from marshmallow import Schema, fields, validate
 
 DATE_METADATA = metadata = {
     'example': '2025-04-18 14:30:00'}
-NAME_DESCRIPTION = 'Dia e hora do agendamento.'
+DATE_DESCRIPTION = 'Dia e hora do agendamento. ' \
+    '(Não pode ser no passado e nem a mais de 7 dias no futuro.)' \
+    '(Horário selecionado deve estar entre 09:00 e 18:00.)'
 CUSTOMER_METADATA = metadata = {
     'example': 1}
 CUSTOMER_DESCRIPTION = 'ID do cliente que agendou o serviço.'
 EMPLOYEE_METADATA = metadata = {
     'example': 1}
 EMPLOYEE_DESCRIPTION = 'ID do funcionário(a) que irá executar o serviço.'
+SERVICES_METADATA = metadata = {
+    'example': [1]}
+SERVICES_DESCRIPTION = 'Lista de serviços do agendamento.'
 
 
 class AppointmentSchema(Schema):
@@ -27,7 +32,7 @@ class AppointmentSchema(Schema):
     """
 
     date = fields.Str(required=True, metadata=DATE_METADATA,
-                      descriptiom=NAME_DESCRIPTION)
+                      description=DATE_DESCRIPTION)
     customer_id = fields.Int(
         required=True, metadata=EMPLOYEE_METADATA, description=EMPLOYEE_DESCRIPTION)
     employee_id = fields.Int(
@@ -35,8 +40,8 @@ class AppointmentSchema(Schema):
     services_ids = fields.List(
         fields.Int(),
         required=True,
-        metadata={'example': '[1]'},
-        description='List of service IDs associated with the customer',
+        metadata=SERVICES_METADATA,
+        description=SERVICES_DESCRIPTION,
         validate=validate.Length(min=1, max=10)
     )
 
@@ -60,6 +65,6 @@ class AppointmentViewSchema(Schema):
     services_ids = fields.List(
         fields.Pluck('ServiceViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1]'},
-        description='List of service IDs associated with the customer',
+        metadata=SERVICES_METADATA,
+        description=SERVICES_DESCRIPTION,
     )

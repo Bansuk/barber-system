@@ -127,19 +127,43 @@ class AppointmentValidation():
         """
 
         if not AppointmentValidation._is_date_in_valid_range(date):
-            abort(400, message='Invalid date.')
+            abort(400, errors={
+                'json': {
+                    'date': ['Date is outside of allowed range.']
+                }
+            })
 
         if not AppointmentValidation._is_time_in_business_hours_range(date):
-            abort(400, message='Invalid hour.')
+            abort(400, errors={
+                'json': {
+                    'date': ['Hour is outside of working hours.']
+                }
+            })
 
         if not AppointmentValidation._is_date_available(date, employee_id, customer_id):
-            abort(409, message='Date is unavailable.')
+            abort(409, errors={
+                'json': {
+                    'date': ['Selecetd date is unavailable.']
+                }
+            })
 
         if not AppointmentValidation._are_services_valid(services_ids):
-            abort(404, message='Provided services were not found.')
+            abort(404, errors={
+                'json': {
+                    'service': ['Provided services were not found.']
+                }
+            })
 
         if not AppointmentValidation._is_employee_valid(employee_id):
-            abort(404, message='Provided employee was not found.')
+            abort(404, errors={
+                'json': {
+                    'employee': ['Provided employee was not found.']
+                }
+            })
 
         if not AppointmentValidation._is_customer_valid(customer_id):
-            abort(404, message='Provided customer was not found.')
+            abort(404, errors={
+                'json': {
+                    'customer': ['Provided customer was not found.']
+                }
+            })

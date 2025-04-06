@@ -35,7 +35,7 @@ employee_responses = {
             'application/json': {
                 'schema': ErrorSchema,
                 'example': {
-                    'code': 400,
+                    'code': 404,
                     'errors': {
                         'json': {
                             'service': ['Service not found.']

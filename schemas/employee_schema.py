@@ -10,6 +10,8 @@ NAME_DESCRIPTION = 'Nome do Funcionário(a)'
 EMAIL_METADATA = {
     'example': 'fulano@teste.com'}
 EMAIL_DESCRIPTION = 'E-mail do Funcionário(a)'
+SERVICES_METADATA = {'example': '[1]'}
+SERVICES_DESCRIPTION = 'Lista dos serviços executados pelo funcinário(a)'
 
 
 class EmployeeSchema(Schema):
@@ -29,8 +31,8 @@ class EmployeeSchema(Schema):
     services = fields.List(
         fields.Int(),
         required=True,
-        metadata={'example': '[1]'},
-        description='Lista dos serviços executados pelo funcinário(a)',
+        metadata=SERVICES_METADATA,
+        description=SERVICES_DESCRIPTION,
         validate=validate.Length(min=1, max=10)
     )
 
@@ -54,6 +56,6 @@ class EmployeeViewSchema(Schema):
     services = fields.List(
         fields.Pluck('ServiceViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1]'},
-        description='Lista dos serviços executados pelo funcinário(a)',
+        metadata=SERVICES_METADATA,
+        description=SERVICES_DESCRIPTION,
     )
