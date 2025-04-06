@@ -35,7 +35,7 @@ class AppointmentSchema(Schema):
     services_ids = fields.List(
         fields.Int(),
         required=True,
-        metadata={'example': '[1, 6]'},
+        metadata={'example': '[1]'},
         description='List of service IDs associated with the customer',
         validate=validate.Length(min=1, max=10)
     )
@@ -60,6 +60,6 @@ class AppointmentViewSchema(Schema):
     services_ids = fields.List(
         fields.Pluck('ServiceViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1, 6]'},
+        metadata={'example': '[1]'},
         description='List of service IDs associated with the customer',
     )

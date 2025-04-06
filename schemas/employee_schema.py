@@ -29,8 +29,8 @@ class EmployeeSchema(Schema):
     services = fields.List(
         fields.Int(),
         required=True,
-        metadata={'example': '[1, 6]'},
-        description='List of service IDs associated with the customer',
+        metadata={'example': '[1]'},
+        description='Lista dos serviços executados pelo funcinário(a)',
         validate=validate.Length(min=1, max=10)
     )
 
@@ -54,6 +54,6 @@ class EmployeeViewSchema(Schema):
     services = fields.List(
         fields.Pluck('ServiceViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1, 6]'},
-        description='List of service IDs associated with the customer',
+        metadata={'example': '[1]'},
+        description='Lista dos serviços executados pelo funcinário(a)',
     )

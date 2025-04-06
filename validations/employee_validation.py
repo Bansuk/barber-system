@@ -68,11 +68,22 @@ class EmployeeValidation():
         """
 
         if EmployeeValidation._email_exists(email):
-            abort(409, message='Email already registered.')
+            abort(409, errors={
+                'json': {
+                    'email': ['Email already registered.']
+                }
+            })
 
         if EmployeeValidation._services_is_empty():
-            abort(
-                422, message='A service must be registered before registering an employee.')
+            abort(422, errors={
+                'json': {
+                    'service': ['A service must be registered before registering an employee.']
+                }
+            })
 
         if not EmployeeValidation._are_services_valid(services):
-            abort(404, message='Service not found.')
+            abort(404, errors={
+                'json': {
+                    'service': ['Service not found.']
+                }
+            })

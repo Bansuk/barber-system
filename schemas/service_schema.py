@@ -47,12 +47,12 @@ class ServiceViewSchema(Schema):
     employees = fields.List(
         fields.Pluck('EmployeeViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1, 6]'},
+        metadata={'example': '[1]'},
         description='Lista dos funcionários que executam o serviço',
     )
     appointments = fields.List(
         fields.Pluck('AppointmentViewSchema', 'id'),
         required=True,
-        metadata={'example': '[1, 6]'},
+        metadata={'example': '[1]'},
         description='Lista dos agendamentos que possuem o serviço',
     )
