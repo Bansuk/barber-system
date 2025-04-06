@@ -51,7 +51,8 @@ class EmployeeValidation():
             bool: True if all Services were found, False otherwise.
         """
 
-        return bool(services) and all(get_service(service_id=service) is not None for service in services)
+        return bool(services) and all(get_service(service_id=service) is
+                                      not None for service in services)
 
     @staticmethod
     def validate_employee(email: str, services: List[Service]) -> None:
@@ -67,11 +68,11 @@ class EmployeeValidation():
         """
 
         if EmployeeValidation._email_exists(email):
-            abort(409, message="Email already registered.")
+            abort(409, message='Email already registered.')
 
         if EmployeeValidation._services_is_empty():
             abort(
-                422, message="A service must be registered before registering an employee.")
+                422, message='A service must be registered before registering an employee.')
 
         if not EmployeeValidation._are_services_valid(services):
-            abort(404, message="Service not found.")
+            abort(404, message='Service not found.')

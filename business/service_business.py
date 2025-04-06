@@ -13,7 +13,7 @@ def create_service(name: str, price: int) -> Service:
 
     Args:
         name (str): The service's name.
-        price (int): The service's price.
+        price (int): The service's price in cents.
 
     Returns:
         Service: Created service.

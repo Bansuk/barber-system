@@ -20,7 +20,7 @@ class Service(db.Model):
     Attributes:
         id (int): Primary key identifier.
         name (str): Name of the service.
-        price (int): Price of the service.
+        price (int): Price of the service in cents.
         employees (list): List of employees that can perform the service.
         appointments (list): List of appointments with assigned service.
         created_at (datetime): Timestamp when the record was created.

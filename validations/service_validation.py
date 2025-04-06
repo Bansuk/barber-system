@@ -49,14 +49,22 @@ class ServiceValidation():
 
         Args:
             name (str): The service's name.
-            price (int): The service's price.
+            price (int): The service's price in cents.
 
         Raises:
             HTTPException: If any validation fails.
         """
 
         if ServiceValidation._is_service_already_registered(name):
-            abort(409, message="Service is already registered.")
+            abort(409, errors={
+                'json': {
+                    'name': ['Service already registered.']
+                }
+            })
 
         if not ServiceValidation._is_price_in_valid_range(price):
-            abort(422, message="Invalid price.")
+            abort(422, errors={
+                'json': {
+                    'price': ['Invalid price.']
+                }
+            })

@@ -1,17 +1,17 @@
 """
-This module contains standard descriptions and responses for the Customer API.
+This module contains standard descriptions and responses for the Service API.
 """
 
 from schemas.error_schema import ErrorSchema
 
 
-GET_CUSTOMER_SUMMARY = 'Retorna a lista de todos os clientes cadatrados.'
-GET_CUSTOMER_DESCRIPTION = 'Este endpoint retorna uma coleção de cadastros de clientes ' \
+GET_SERVICE_SUMMARY = 'Retorna a lista de todos os serviços cadatrados.'
+GET_SERVICE_DESCRIPTION = 'Este endpoint retorna uma coleção de serviços cadastrados ' \
     'no formato JSON.'
-POST_CUSTOMER_SUMMARY = 'Lida com a criação de um novo cliente.'
-POST_CUSTOMER_DESCRIPTION = 'Este endpoint processa o envio de um formulário (JSON) ' \
-    'para criar um novo registro de cliente.'
-customer_responses = {
+POST_SERVICE_SUMMARY = 'Lida com a criação de um novo serviço.'
+POST_SERVICE_DESCRIPTION = 'Este endpoint processa o envio de um formulário (JSON) ' \
+    'para criar um novo registro de serviço.'
+service_responses = {
     400: {
         'description': 'Bad Request: O formato do corpo JSON é inválido.',
         'content': {
@@ -30,8 +30,7 @@ customer_responses = {
         }
     },
     409: {
-        'description': 'Conflict: O email fornecido já está em uso. Por favor, '
-        'forneça um email diferente.',
+        'description': 'Conflict: O serviço informado já está cadastrado.',
         'content': {
             'application/json': {
                 'schema': ErrorSchema,
@@ -39,7 +38,7 @@ customer_responses = {
                     'code': 409,
                     'errors': {
                         'json': {
-                            'email': ['Email already registered.']
+                            'name': ['Service already registered.']
                         }
                     },
                     'status': 'Conflict'
@@ -52,8 +51,8 @@ customer_responses = {
         'Validation Error: A requisição contém campos ausentes ou inválidos.\n\n'
         '**Motivos Possíveis:**\n'
         '- `name` é obrigatório, mas não foi fornecido.\n'
-        '- `email` é obrigatório, mas não foi fornecido.\n'
-        '- `email`: o formato do email é inválido (deve ser um endereço de e-mail válido).\n\n',
+        '- `price` é obrigatório, mas não foi fornecido.\n'
+        '- `price`: o valor do serviço é inválido.\n\n',
         'content': {
             'application/json': {
                 'schema': ErrorSchema,
@@ -62,8 +61,8 @@ customer_responses = {
                     'errors': {
                         'json': {
                             'name': ['Missing data for required field.'],
-                            'email': ['Missing data for required field.',
-                                      'Not a valid email address.']
+                            'price': ['Missing data for required field.',
+                                      'Invalid price.']
                         }
                     },
                     'status': 'Unprocessable Entity'

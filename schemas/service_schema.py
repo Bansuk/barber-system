@@ -9,7 +9,7 @@ NAME_METADATA = metadata = {
 NAME_DESCRIPTION = 'Nome do Serviço'
 PRICE_METADATA = metadata = {
     'example': '4500'}
-PRICE_DESCRIPTION = 'Preço do Serviço'
+PRICE_DESCRIPTION = 'Preço do Serviço em centavos (4500 é equivalente $45,00)'
 
 
 class ServiceSchema(Schema):
@@ -18,7 +18,7 @@ class ServiceSchema(Schema):
 
     Attributes:
         name (str): The name of the service (min 3, max 100 characters).
-        price (int): The service's price.
+        price (int): The service's price in cents.
     """
 
     name = fields.Str(required=True, metadata=NAME_METADATA,
@@ -48,11 +48,11 @@ class ServiceViewSchema(Schema):
         fields.Pluck('EmployeeViewSchema', 'id'),
         required=True,
         metadata={'example': '[1, 6]'},
-        description='List of employees IDs associated with the service',
+        description='Lista dos funcionários que executam o serviço',
     )
     appointments = fields.List(
         fields.Pluck('AppointmentViewSchema', 'id'),
         required=True,
         metadata={'example': '[1, 6]'},
-        description='List of appointments IDs associated containing the service',
+        description='Lista dos agendamentos que possuem o serviço',
     )
