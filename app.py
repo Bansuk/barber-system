@@ -6,11 +6,13 @@ registers routes, and starts the application.
 """
 
 from flask import Flask
+from flask_cors import CORS
 from flask_smorest import Api
 from database.db_setup import init_db
 from routes import register_routes
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 app.config['API_TITLE'] = 'Barber System'
 app.config['API_VERSION'] = '1.0'
 app.config['OPENAPI_VERSION'] = '3.0.2'
