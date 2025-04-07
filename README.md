@@ -1,11 +1,11 @@
-## Barber System
-O Barber System é um sistema de gestão para barbearias que permite agendamentos de horários e gestão de clientes, funcionários e serviços.
+# Barber System 💈  
+Um sistema de gestão para barbearias, permitindo o gerenciamento eficiente de clientes, funcionários e agendamentos.
 
 ### Funcionalidades
-- Cadastro e Listagem de Funcionários;
-- Cadastro e Listagem de Clientes;
-- Cadastro e Listagem de Serviços;
-- Cadastro e Listagem de Agendamentos.
+**Gestão de Funcionários**: Cadastro e listagem de profissionais.  
+**Gerenciamento de Clientes**: Registro e organização de clientes da barbearia.  
+**Controle de Serviços**: Definição e listagem dos serviços oferecidos.  
+**Agendamentos**: Marcação e visualização de horários disponíveis.  
 ### Pré-requisitos (mínimos)
 ```
 $ git --version
@@ -32,7 +32,7 @@ pip install -r requirements.txt
 python3 app.py
 ```
 ### Documentação
-Com o projeto em execução, acesse http://localhost:5000/api/docs//swagger-ui para obter a documentação dos endpoints na especificação OpenAPI.
+Com o projeto em execução, acesse [Swagger UI](http://localhost:5000/api/docs/swagger-ui) para obter a documentação dos endpoints na especificação OpenAPI.
 ### Feito Com
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org)
 [![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/en/stable/)
