@@ -20,7 +20,7 @@ v3.10.12
 ### Instalação
 1. Clone o repositório:
 ```bash
- git clone https://github.com/Bansuk/barber-system.git
+ git clone https://github.com/Bansuk/barber-system-back-end.git
 ```
 
 2. Dentro da pasta criada (barber-system), instale as dependências:
